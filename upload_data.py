@@ -3,19 +3,22 @@ import pandas as pd
 import numpy as np
 import datetime
 
+
 def convert_year_to_date(year):
     if pd.isna(year):
-        return datetime.date(1900, 1, 1)  # Default date if projected_eol_date is None
+        return datetime.date(1900, 1, 1)
     if isinstance(year, (pd.Timestamp, datetime.datetime)):
         return year.date()
     return pd.to_datetime(f'{int(year)}-01-01').date()
 
+
 def convert_purchase_date(date):
     if pd.isna(date):
-        return datetime.date(1900, 1, 1)  # Default date if purchase_date is None
+        return datetime.date(1900, 1, 1)
     if isinstance(date, (pd.Timestamp, datetime.datetime)):
         return date.date()
     return pd.to_datetime(date).date()
+
 
 def upload_data(file_path, table_name):
     # Read the Excel file
@@ -26,16 +29,19 @@ def upload_data(file_path, table_name):
 
     # Convert year columns to date
     if 'projected_eol_date' in df.columns:
-        df['projected_eol_date'] = df['projected_eol_date'].apply(convert_year_to_date)
+        df['projected_eol_date'] = df['projected_eol_date'].apply(
+            convert_year_to_date)
     if 'purchase_date' in df.columns:
         df['purchase_date'] = df['purchase_date'].apply(convert_purchase_date)
 
     # Replace None values in prices with 0
     if 'purchase_price' in df.columns:
-        df['purchase_price'] = df['purchase_price'].apply(lambda x: 0 if x is None else x)
+        df['purchase_price'] = df['purchase_price'].apply(
+            lambda x: 0 if x is None else x)
 
     if 'replacement_price' in df.columns:
-        df['replacement_price'] = df['replacement_price'].apply(lambda x: 0 if x is None else x)
+        df['replacement_price'] = df['replacement_price'].apply(
+            lambda x: 0 if x is None else x)
 
     # Replace None values in specific columns with "NA"
     for col in ['company', 'model', 'serial', 'description']:
@@ -50,7 +56,7 @@ def upload_data(file_path, table_name):
         port=3340
     )
     db.connect()
-    
+
     # Iterate over the rows in the DataFrame and insert them into the database
     for index, row in df.iterrows():
         columns = []
@@ -70,9 +76,10 @@ def upload_data(file_path, table_name):
 
         query = f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES ({', '.join(placeholders)})"
         db.execute_query(query, tuple(values))
-    
+
     # Close the database connection
     db.close()
+
 
 if __name__ == "__main__":
     file_path = 'Book1.xlsx'
