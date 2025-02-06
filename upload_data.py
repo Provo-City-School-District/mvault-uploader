@@ -57,7 +57,7 @@ def upload_data(file_path, table_name):
     )
     db.connect()
 
-    # Iterate over the rows in the DataFrame and insert them into the database
+    # Iterate over the rows in the spreadsheet and insert them into the database
     for index, row in df.iterrows():
         columns = []
         values = []
