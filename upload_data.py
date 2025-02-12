@@ -12,14 +12,6 @@ def convert_year_to_date(year):
     return pd.to_datetime(f'{int(year)}-01-01').date()
 
 
-def convert_purchase_date(date):
-    if pd.isna(date):
-        return datetime.date(1900, 1, 1)
-    if isinstance(date, (pd.Timestamp, datetime.datetime)):
-        return date.date()
-    return pd.to_datetime(date).date()
-
-
 def upload_data(file_path, table_name):
     # Read the Excel file
     df = pd.read_excel(file_path)
@@ -32,7 +24,7 @@ def upload_data(file_path, table_name):
         df['projected_eol_date'] = df['projected_eol_date'].apply(
             convert_year_to_date)
     if 'purchase_date' in df.columns:
-        df['purchase_date'] = df['purchase_date'].apply(convert_purchase_date)
+        df['purchase_date'] = df['purchase_date'].apply(convert_year_to_date)
 
     # Replace None values in prices with 0
     if 'purchase_price' in df.columns:
