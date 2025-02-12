@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 Book1.xlsx
+~$Book1.xlsx
 
 # C extensions
 *.so
