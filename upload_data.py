@@ -59,7 +59,22 @@ def upload_data(file_path, table_name):
             if row[col] is not None:
                 columns.append(f'`{col}`')
                 value = row[col]
-                if col == 'purchase_price' and value is None:
+                if col == 'company':
+                    company = value
+                    company_query = "INSERT INTO asset_companies (name) VALUES (%s)"
+                    db.execute_query(company_query, [company])
+
+                    db.execute_query("SELECT id FROM asset_companies WHERE name = ?", [company])
+                    company_id = db.fetchone()[0]
+
+                    values.append(company_id)
+                    placeholders.append('%s')
+                    continue
+                elif col == 'category':
+                    values.append(value)
+                    placeholders.append('%s')
+                    continue
+                elif col == 'purchase_price' and value is None:
                     value = 0  # Ensure purchase_price is not None
                 if isinstance(value, pd.Timestamp):
                     value = value.date()  # Convert Timestamp to date

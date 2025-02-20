@@ -32,6 +32,12 @@ class DatabaseConnection:
         except mariadb.Error as e:
             print(f"Error: {e}")
 
+    def get_insert_id(self):
+        return self.cursor.lastrowid
+    
+    def fetchone(self):
+        return self.cursor.fetchone()
+
     def close(self):
         if self.cursor:
             self.cursor.close()
