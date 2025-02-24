@@ -60,11 +60,12 @@ def upload_data(file_path, table_name):
                 columns.append(f'`{col}`')
                 value = row[col]
                 if col == 'company':
-                    company = value
+                    company = value.title()
                     company_query = "INSERT INTO asset_companies (name) VALUES (%s)"
                     db.execute_query(company_query, [company])
 
-                    db.execute_query("SELECT id FROM asset_companies WHERE name = ?", [company])
+                    db.execute_query(
+                        "SELECT id FROM asset_companies WHERE name = ?", [company])
                     company_id = db.fetchone()[0]
 
                     values.append(company_id)
