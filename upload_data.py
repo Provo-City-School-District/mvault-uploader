@@ -36,7 +36,7 @@ def upload_data(file_path, table_name):
             lambda x: 0 if x is None else x)
 
     # Replace None values in specific columns with "NA"
-    for col in ['company', 'model', 'serial', 'description']:
+    for col in ['company', 'model', 'serial', 'description', 'name']:
         df[col] = df[col].apply(lambda x: 'NA' if x is None else x)
 
     # Establish a database connection
